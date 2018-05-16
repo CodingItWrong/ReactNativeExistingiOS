@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import React
 
 class ViewController: UIViewController {
 
@@ -20,6 +21,9 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-
+    @IBAction func showRNThing(_ sender: Any) {
+        let jsCodeLocation = URL(string: "http://localhost:8081/index.bundle?platform=ios")
+    }
+    
 }
 
