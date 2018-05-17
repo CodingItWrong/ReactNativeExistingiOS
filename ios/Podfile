@@ -26,4 +26,54 @@ target 'ReactNativeExistingiOS' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
+  def fix_unused_yoga_headers
+    filepath = '../node_modules/react-native/ReactCommon/yoga/yoga.podspec'
+
+    contents = []
+
+    file = File.open(filepath, 'r')
+    file.each_line do | line |
+        contents << line
+    end
+    file.close
+
+    if contents[43].include?('end')
+        contents.insert(43, "  spec.public_header_files = 'yoga/Yoga.h', 'yoga/YGEnums.h', 'yoga/YGMacros.h'")
+        contents.insert(43, "  # Only expose the needed headers")
+        contents.insert(43, '')
+
+        file = File.open(filepath, 'w') do |f|
+            f.puts(contents)
+        end
+    end
+  end
+
+  def fix_incorrect_fishhook_header
+    filepath = '../node_modules/react-native/Libraries/WebSocket/RCTReconnectingWebSocket.m'
+
+    contents = []
+
+    file = File.open(filepath, 'r')
+    file.each_line do | line |
+        contents << line
+    end
+    file.close
+
+    if contents[11].include?('<fishhook/fishhook.h>')
+        contents[11] = '#import "fishhook.h"'
+
+        file = File.open(filepath, 'w') do |f|
+            f.puts(contents)
+        end
+    end
+  end
+
+  def react_native_fix
+    fix_unused_yoga_headers
+    fix_incorrect_fishhook_header
+  end
+
+  pre_install do |installer|
+    react_native_fix
+  end
 end
