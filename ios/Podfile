@@ -76,4 +76,8 @@ target 'ReactNativeExistingiOS' do
   pre_install do |installer|
     react_native_fix
   end
+
+  post_install do |installer|
+    react_native_fix
+  end
 end
